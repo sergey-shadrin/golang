@@ -79,6 +79,103 @@ func pointers() {
 	fmt.Println(*p)
 }
 
+type Vertex struct {
+	X int
+	Y int
+}
+
+func playWithStructs() {
+	dot := Vertex{1,2}
+	fmt.Println(dot)
+	dot.X = 4
+	fmt.Println(dot.X, dot.Y)
+	p := &dot
+	p.Y = 1e8
+	fmt.Println(dot)
+	antiDot := Vertex{Y: 5, X: 10}
+	fmt.Println(antiDot)
+}
+
+func introduceArrays() {
+	arrayOfStrings := [2]string{"Shit", "Happens"}
+	fmt.Println(arrayOfStrings[0])
+	fmt.Println(arrayOfStrings)
+}
+
+func playWithSlices() {
+	myNumbers :=  [7]int{1, 2, 3, 4, 5, 6, 7}
+	fmt.Println(myNumbers)
+	myNumbersSlice := myNumbers[0:5]
+	printSlice(myNumbersSlice)
+	myNumbersSlice[3] = 8
+	fmt.Println(myNumbers)
+	instantSlice := []string{"Mamma", "Mia!"}
+	fmt.Println(instantSlice)
+	instantSlice = instantSlice[1:]
+	fmt.Println(instantSlice)
+
+	myNewSlice := []int{1, 2, 3, 4, 5, 6, 7}
+	myNewSlice = myNewSlice[:0]
+	printSlice(myNewSlice)
+	myNewSlice = myNewSlice[:3]
+	printSlice(myNewSlice)
+	myNewSlice = myNewSlice[:4]
+	printSlice(myNewSlice)
+
+	var nilSlice []int
+	printSlice(nilSlice)
+
+	nilSlice = append(nilSlice, 7, 8, 9)
+	printSlice(nilSlice)
+
+	handMadeSlice := createIntSlice(10)
+	printSlice(handMadeSlice)
+
+	boolSlice := make([]bool, 5)
+	fmt.Println(boolSlice)
+
+	matrix := [][]int{
+		{1, 2, 3},
+		{4, 5, 6},
+		{7, 8, 9},
+	}
+	fmt.Println(matrix[1][1])
+}
+
+func printSlice(slice []int) {
+	fmt.Printf("len: %v, cap: %v, value: %v\n", len(slice), cap(slice), slice)
+}
+
+func createIntSlice(size int)[]int {
+	return make([]int, size)
+}
+
+func checkRange() {
+	myArray := [5]int{1, 2, 3, 4, 5}
+	for i, v := range myArray {
+		fmt.Println(i, v)
+	}
+	sliceOfMyArray := myArray[:]
+	for _, v := range sliceOfMyArray {
+		fmt.Println(v)
+	}
+	myMap := map[string]int{
+		"first": 1,
+		"second": 2,
+	}
+	for key, value := range myMap {
+		fmt.Println(key, value)
+		myMap[key] = value * 2
+	}
+	fmt.Println(myMap)
+	fmt.Println(myMap["second"])
+	delete(myMap, "second")
+	elem, ok := myMap["first"]
+	fmt.Println(elem, ok)
+	elem, ok = myMap["second"]
+	fmt.Println(elem, ok)
+}
+
 func main() {
 	fmt.Println("hello, world\n")
 	fmt.Println(swap(5, 6))
@@ -88,4 +185,8 @@ func main() {
 	equals(0.5, float64(1) / float64(2))
 	printTypes()
 	pointers()
+	playWithStructs()
+	introduceArrays()
+	playWithSlices()
+	checkRange()
 }
