@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"strings"
 )
 
 const Epsilon = 0.00000000001
@@ -176,6 +177,10 @@ func checkRange() {
 	fmt.Println(elem, ok)
 }
 
+func testStrings() {
+	fmt.Println(strings.ToLower("Gopher"))
+}
+
 func main() {
 	fmt.Println("hello, world\n")
 	fmt.Println(swap(5, 6))
@@ -189,4 +194,5 @@ func main() {
 	introduceArrays()
 	playWithSlices()
 	checkRange()
+	testStrings()
 }

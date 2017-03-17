@@ -1,7 +1,9 @@
 package main
 
 import "fmt"
+import "anagram/anagram"
 
 func main() {
-	fmt.Printf("hello, world\n")
+	isAnagram := anagram.IsAnagram("Привет", "Тевирп")
+	fmt.Println(isAnagram)
 }
