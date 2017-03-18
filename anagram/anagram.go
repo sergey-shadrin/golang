@@ -1,11 +1,11 @@
 package anagram
 
 import (
-	"unicode"
 	"sort"
+	"unicode"
 )
 
-func IsAnagram(first, second string) bool {
+func isAnagram(first, second string) bool {
 	if len(first) != len(second) {
 		return false
 	}
@@ -15,8 +15,8 @@ func IsAnagram(first, second string) bool {
 		j := 0
 		didFindMatch := false
 		for _, secondStringChar := range second {
-			if (!checkedIndexFlags[j]) {
-				if (unicode.ToLower(secondStringChar) == unicode.ToLower(firstStringChar)) {
+			if !checkedIndexFlags[j] {
+				if unicode.ToLower(secondStringChar) == unicode.ToLower(firstStringChar) {
 					didFindMatch = true
 					checkedIndexFlags[j] = true
 					break
@@ -42,8 +42,8 @@ func strToLowerAndToInt(str string) []int {
 	return result
 }
 
-func IsAnagramWithSort(first, second string) bool {
-	if (len(first) != len(second)) {
+func isAnagramWithSort(first, second string) bool {
+	if len(first) != len(second) {
 		return false
 	}
 	firstStringAsInt := strToLowerAndToInt(first)
