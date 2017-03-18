@@ -47,6 +47,7 @@ func isAnagramWithSort(first, second string) bool {
 		return false
 	}
 	firstStringAsInt := strToLowerAndToInt(first)
+
 	sort.Ints(firstStringAsInt)
 	secondStringAsInt := strToLowerAndToInt(second)
 	sort.Ints(secondStringAsInt)
