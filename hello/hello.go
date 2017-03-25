@@ -181,6 +181,14 @@ func testStrings() {
 	fmt.Println(strings.ToLower("Gopher"))
 }
 
+func delElement() {
+	mySlice := []int{0, 1, 2, 3, 4, 5, 6}
+	fmt.Println(len(mySlice))
+	mySlice = append(mySlice[:0], mySlice[1:]...)
+	fmt.Println(mySlice)
+	fmt.Println(len(mySlice))
+}
+
 func main() {
 	fmt.Println("hello, world\n")
 	fmt.Println(swap(5, 6))
@@ -195,4 +203,5 @@ func main() {
 	playWithSlices()
 	checkRange()
 	testStrings()
+	delElement()
 }
