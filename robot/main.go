@@ -222,11 +222,7 @@ func main() {
 	menu.AddItem("left", "Makes the Robot walk left", &WalkCommand{robot, LEFT})
 	menu.AddItem("right", "Makes the Robot walk right", &WalkCommand{robot, RIGHT})
 
-
-	horseMovingCommand := &CompositeCommand{[]Command{
-		&WalkCommand{robot, UP},
-		&WalkCommand{robot, RIGHT},
-	}}
+	horseMovingCommand := NewHorseMovingCommand(robot)
 	menu.AddItem("horse_moving", "Makes the Robot walk like horse", horseMovingCommand)
 
 	menu.AddItem("status", "Prints Robot status (turned on/off, walk direction)", &StatusCommand{robot})
@@ -237,4 +233,13 @@ func main() {
 
 	menu.executeCommand("help")
 	menu.Run(bufio.NewReader(os.Stdin))
+}
+
+func NewHorseMovingCommand(robot *Robot) Command {
+	horseMovingCommand := &CompositeCommand{[]Command{
+		&WalkCommand{robot, UP},
+		&WalkCommand{robot, UP},
+		&WalkCommand{robot, RIGHT},
+	}}
+	return horseMovingCommand
 }
