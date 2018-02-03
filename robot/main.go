@@ -44,7 +44,7 @@ func (c *TurnOffCommand) Execute() {
 }
 
 type WalkCommand struct {
-	robot *Robot
+	robot     *Robot
 	direction int64
 }
 
@@ -108,10 +108,10 @@ func (r *Robot) TurnOff() {
 
 func getDirectionString(direction int64) string {
 	var directions = map[int64]string{
-		UP: "up",
-		DOWN: "down",
-		LEFT: "left",
-		RIGHT: "right",
+		UP:           "up",
+		DOWN:         "down",
+		LEFT:         "left",
+		RIGHT:        "right",
 		NO_DIRECTION: "no direction",
 	}
 	return directions[direction]
@@ -141,7 +141,7 @@ func (r *Robot) Stop() {
 
 func (r *Robot) Status() {
 	turnedOnString := "off"
-	if (r.turnedOn) {
+	if r.turnedOn {
 		turnedOnString = "on"
 	}
 	fmt.Printf("Current status is: turned %v, direction is %v\n", turnedOnString, getDirectionString(r.direction))
