@@ -6,7 +6,10 @@ import (
 	"io"
 	"os"
 	"fmt"
-	"crypto/md5"
+	"github.com/sergey-shadrin/golang/gosite/model/database"
+	"github.com/sergey-shadrin/golang/gosite/key_generator"
+	"github.com/sergey-shadrin/golang/gosite/model/video"
+	"mime/multipart"
 )
 
 func handleUploadVideo(responseWriter http.ResponseWriter, request *http.Request) {
@@ -17,6 +20,7 @@ func handleUploadVideo(responseWriter http.ResponseWriter, request *http.Request
 	}
 	uploadedFile, fileHeader, err := request.FormFile("file[]")
 	defer uploadedFile.Close()
+
 	if err != nil {
 		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
 		return
@@ -27,29 +31,57 @@ func handleUploadVideo(responseWriter http.ResponseWriter, request *http.Request
 		return
 	}
 
-	h := md5.New()
-	if _, err := io.Copy(h, uploadedFile); err != nil {
-		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+	db := database.Get()
+	q := "INSERT INTO video set status = ?"
+	r, err := db.Exec(q, status.INIT)
+	if err != nil {
+		handleInternalError(responseWriter, err)
 		return
 	}
-	uploadedFile.Seek(0, 0)
 
-	uploadedFileChecksum := string(h.Sum(nil))
-	destinationDirName := fmt.Sprintf("/usr/local/www/data/gosite/content/%x", uploadedFileChecksum)
-	if err := os.MkdirAll(destinationDirName, os.ModePerm); err != nil {
-		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+	var lastInsertId int64;
+	if lastInsertId, err = r.LastInsertId(); err != nil {
+		handleInternalError(responseWriter, err)
 		return
+	}
+
+	var contentKey string;
+	if contentKey, err = key_generator.GenerateKeyById(lastInsertId); err != nil {
+		handleInternalError(responseWriter, err)
+		return
+	}
+
+	if err = copyUploadedFileToStorage(uploadedFile, contentKey); err != nil {
+		handleInternalError(responseWriter, err)
+		return
+	}
+
+	q = "UPDATE video SET content_key = ? WHERE id = ?"
+	if _, err = db.Exec(q, contentKey, lastInsertId); err != nil {
+		handleInternalError(responseWriter, err)
+	}
+}
+
+func handleInternalError(responseWriter http.ResponseWriter, err error) {
+	http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+}
+
+func copyUploadedFileToStorage(uploadedFile multipart.File, contentKey string) error {
+	destinationDirName := fmt.Sprintf("/usr/local/www/data/gosite/content/%x", contentKey)
+	if err := os.MkdirAll(destinationDirName, os.ModePerm); err != nil {
+		return err
 	}
 
 	destinationFileName := fmt.Sprintf("%v/video.mp4", destinationDirName)
 	destinationFile, err := os.Create(destinationFileName)
 	if err != nil {
-		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
-		return
+		return err
 	}
 	defer destinationFile.Close()
 
 	if _, err := io.Copy(destinationFile, uploadedFile); err != nil {
-		http.Error(responseWriter, err.Error(), http.StatusInternalServerError)
+		return err
 	}
+
+	return nil
 }

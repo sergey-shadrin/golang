@@ -7,6 +7,7 @@ import (
 	"os"
 	"context"
 	"github.com/sergey-shadrin/golang/gosite/osutil"
+	"github.com/sergey-shadrin/golang/gosite/model/database"
 )
 
 func main() {
@@ -24,6 +25,7 @@ func main() {
 
 	osutil.WaitForKillSignal(killSignalChan)
 	server.Shutdown(context.Background())
+	database.Close()
 }
 
 func startServer(serverUrl string) *http.Server {
