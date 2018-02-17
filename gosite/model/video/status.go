@@ -1,5 +1,11 @@
 package status
 
-const INIT = 1;
+type VideoStatusValue byte
 
-const READY = 3;
+const (
+	CREATED    = 1
+	PROCESSING = 2
+	READY      = 3
+	DELETED    = 4
+	ERROR      = 5
+)

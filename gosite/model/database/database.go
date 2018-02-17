@@ -12,7 +12,8 @@ func Get() *sql.DB {
 	var err error
 	connection, err = sql.Open("mysql", "sergey:12345Q@/govideo")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(err.Error())
+		panic(err.Error())
 	}
 	return connection
 }

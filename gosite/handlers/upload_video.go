@@ -33,7 +33,7 @@ func handleUploadVideo(responseWriter http.ResponseWriter, request *http.Request
 
 	db := database.Get()
 	q := "INSERT INTO video set status = ?"
-	r, err := db.Exec(q, status.INIT)
+	r, err := db.Exec(q, status.CREATED)
 	if err != nil {
 		handleInternalError(responseWriter, err)
 		return
