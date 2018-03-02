@@ -28,10 +28,7 @@
 [[projects]]
   branch = "master"
   name = "github.com/speps/go-hashids"
-  packages = [
-    ".",
-    "cmd/hashid"
-  ]
+  packages = ["."]
   revision = "c6ced3330f133cec79e144fb11b2e4c5154059ae"
 
 [[projects]]
@@ -52,6 +49,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8a2f153ce8d77fba183c4148be883cf3a53c59929ae580b4f6efbd200c0b7ea1"
+  inputs-digest = "58615e5d9518896df52c34bef91eea6aad80e75607474441e2dddc97e34cc201"
   solver-name = "gps-cdcl"
   solver-version = 1
