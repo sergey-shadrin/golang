@@ -5,7 +5,7 @@ import (
 	"github.com/sergey-shadrin/golang/gosite/model/database"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"fmt"
+	"github.com/sergey-shadrin/golang/gosite/path_generator"
 )
 
 type VideoInfo struct {
@@ -36,7 +36,8 @@ func handleVideo(responseWriter http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	videoInfo.URL = fmt.Sprintf("/content/%s/video.mp4", videoInfo.Id)
+	videoInfo.URL = path_generator.GetVideoUrl(videoInfo.Id)
+	videoInfo.Thumbnail = path_generator.GetVideoThumbnailUrl(videoInfo.Id)
 
 	renderAsJson(responseWriter, videoInfo)
 }

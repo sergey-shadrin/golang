@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"github.com/sergey-shadrin/golang/gosite/model/database"
+	"github.com/sergey-shadrin/golang/gosite/path_generator"
 )
 
 type VideoListItem struct {
@@ -25,6 +26,7 @@ func handleList(writer http.ResponseWriter, _ *http.Request) {
 	for rows.Next() {
 		var videoListItem VideoListItem
 		rows.Scan(&videoListItem.Id, &videoListItem.Name, &videoListItem.Duration)
+		videoListItem.Thumbnail = path_generator.GetVideoThumbnailUrl(videoListItem.Id)
 		videoListItems = append(videoListItems, videoListItem)
 	}
 	renderAsJson(writer, videoListItems)
