@@ -2,6 +2,10 @@ package handlers
 
 import (
 	"net/http"
+	"github.com/sergey-shadrin/golang/gosite/model/database"
+	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
+	"fmt"
 )
 
 type VideoInfo struct {
@@ -12,14 +16,27 @@ type VideoInfo struct {
 	URL       string `json:"url"`
 }
 
-func handleVideo(writer http.ResponseWriter, _ *http.Request) {
-	video := VideoInfo{
-		Id:        "d290f1ee-6c54-4b01-90e6-d701748f0851",
-		Name:      "Black Retrospetive Woman",
-		Duration:  15,
-		Thumbnail: "/content/d290f1ee-6c54-4b01-90e6-d701748f0851/screen.jpg",
-		URL:       "/content/d290f1ee-6c54-4b01-90e6-d701748f0851/index.mp4",
+func handleVideo(responseWriter http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	contentKey, found := vars["CONTENT_KEY"]
+	if found != true || contentKey == "" {
+		log.Error("Invalid request method")
+		http.Error(responseWriter, "Invalid request method", http.StatusBadRequest)
+		return
 	}
 
-	renderAsJson(writer, video)
+	q := "SELECT content_key, name, duration FROM video WHERE content_key = ?"
+	row := database.Get().QueryRow(q, contentKey)
+
+	var videoInfo VideoInfo
+	err := row.Scan(&videoInfo.Id, &videoInfo.Name, &videoInfo.Duration)
+	if err != nil {
+		log.Error(err.Error())
+		http.Error(responseWriter, "The video not found", http.StatusNotFound)
+		return
+	}
+
+	videoInfo.URL = fmt.Sprintf("/content/%s/video.mp4", videoInfo.Id)
+
+	renderAsJson(responseWriter, videoInfo)
 }
