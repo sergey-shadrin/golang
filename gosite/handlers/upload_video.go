@@ -67,12 +67,12 @@ func handleInternalError(responseWriter http.ResponseWriter, err error) {
 }
 
 func copyUploadedFileToStorage(uploadedFile multipart.File, contentKey string) error {
-	destinationDirName := fmt.Sprintf("/usr/local/www/data/gosite/content/%x", contentKey)
+	destinationDirName := fmt.Sprintf("/usr/local/www/data/gosite/content/%s", contentKey)
 	if err := os.MkdirAll(destinationDirName, os.ModePerm); err != nil {
 		return err
 	}
 
-	destinationFileName := fmt.Sprintf("%v/video.mp4", destinationDirName)
+	destinationFileName := fmt.Sprintf("%s/video.mp4", destinationDirName)
 	destinationFile, err := os.Create(destinationFileName)
 	if err != nil {
 		return err

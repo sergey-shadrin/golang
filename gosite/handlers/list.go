@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"github.com/sergey-shadrin/golang/gosite/model/database"
 )
 
 type VideoListItem struct {
@@ -12,11 +13,19 @@ type VideoListItem struct {
 }
 
 func handleList(writer http.ResponseWriter, _ *http.Request) {
-	videoListItem := VideoListItem{
-		Id:        "d290f1ee-6c54-4b01-90e6-d701748f0851",
-		Name:      "Black Retrospetive Woman",
-		Duration:  15,
-		Thumbnail: "/content/d290f1ee-6c54-4b01-90e6-d701748f0851/screen.jpg",
+	q := "SELECT content_key, name, duration FROM video"
+	rows, err := database.Get().Query(q)
+	if err != nil {
+		http.Error(writer, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	renderAsJson(writer, [1]VideoListItem{videoListItem})
+	defer rows.Close()
+
+	var videoListItems []VideoListItem
+	for rows.Next() {
+		var videoListItem VideoListItem
+		rows.Scan(&videoListItem.Id, &videoListItem.Name, &videoListItem.Duration)
+		videoListItems = append(videoListItems, videoListItem)
+	}
+	renderAsJson(writer, videoListItems)
 }
